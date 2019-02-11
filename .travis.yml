@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t leonardost78/dockercomplex-clientTest -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run leonardost78/dockercomplex-clientTest npm test -- --coverage
+
+after_success:
+  - docker build -t leonardost78/dockercomplex-client ./client
+  - docker build -t leonardost78/dockercomplex-nginx ./nginx
+  - docker build -t leonardost78/dockercomplex-api ./api
+  - docker build -t leonardost78/dockercomplex-worker ./worker
+  #Login to docker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  #PUSH images
+  - docker push leonardost78/dockercomplex-client
+  - docker push leonardost78/dockercomplex-nginx
+  - docker push leonardost78/dockercomplex-api
+  - docker push leonardost78/dockercomplex-worker
