@@ -20,3 +20,17 @@ after_success:
   - docker push leonardost78/dockercomplex-nginx
   - docker push leonardost78/dockercomplex-api
   - docker push leonardost78/dockercomplex-worker
+
+
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-1
+  app: dockercomplex
+  env: Dockercomplex-env
+  bucket_name: elasticbeanstalk-us-east-1-500179955596
+  bucket_path: docker-multi
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
